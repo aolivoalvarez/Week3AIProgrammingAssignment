@@ -1,20 +1,96 @@
-// Week3AIProgrammingAssignment.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+
 
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+
+using namespace std;
+
+class Student {
+public:
+    string firstName;
+    string lastName;
+
+    int grade;
+
+};
 
 int main()
 {
-    std::cout << "Hello World!\n";
+
+    string studentLine;
+
+    ifstream studentFile("example.txt");
+
+    vector<Student> students;
+
+    int whitespace;
+    int total = 0;
+    int highest = 0;
+
+
+    if (studentFile.is_open()) {
+        while (getline(studentFile, studentLine)) {
+            Student student;
+
+            whitespace = studentLine.find(" ");
+
+            student.firstName = studentLine.substr(0, whitespace);
+
+            studentLine.erase(0, whitespace + 1);
+
+            whitespace = studentLine.find(" ");
+
+            student.lastName = studentLine.substr(0, whitespace);
+
+            studentLine.erase(0, whitespace + 1);
+
+            student.grade = stoi(studentLine);
+
+            total += student.grade;
+
+            students.push_back(student);
+
+
+            studentLine = " ";
+
+        }
+    }
+    else {
+        cout << "unable to open file \n";
+    }
+
+    for (int j = 0; j < students.size(); j++) {
+
+        for (int i = 0;  i < students.size(); i++) {
+
+
+            if ((students[j].grade > students[i].grade) || (students[j].grade == students[i].grade )) {
+                highest = students[j].grade;
+            }
+            else if (students[i].grade > highest) {
+                highest = students[i].grade;
+                
+            }
+
+
+        }
+
+        for (int d = 0; d < students.size(); d++) {
+
+            if (students[d].grade == highest) {
+                cout << students[d].firstName << " " << students[d].lastName << ": " << students[d].grade << endl;
+                students.erase(students.begin() + d);
+                j--;
+            }
+        }
+
+        highest = 0;
+    }
+    cout << endl;
+    cout << "Average: " << total / 6;
+
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
